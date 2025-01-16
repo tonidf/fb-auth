@@ -1,5 +1,8 @@
+import { auth } from '@/db/firebase'
+import PerfilView from '@/views/perfilView.vue'
 import registerView from '@/views/registerView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
+
 
 
 const routes = [
@@ -9,18 +12,29 @@ const routes = [
     component: registerView
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+    path: '/perfil',
+    name: 'perfil',
+    component: PerfilView,
+    props: (route) => ({ username: route.params.userName }),
+    meta: {  requiresAuth: true}
+  },
+
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const currentUser = auth.currentUser
+
+  if (to.matched.some(record => record.meta.requiresAuth) && !currentUser ) {
+    next({name: "register"})
+    return
+  }
+
+  next()
 })
 
 export default router
