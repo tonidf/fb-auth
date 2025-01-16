@@ -1,11 +1,12 @@
+import registerView from '@/views/registerView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'register',
+    component: registerView
   },
   {
     path: '/about',
